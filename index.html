@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
   <body>
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
+    <div id="unity-container" class="unity-desktop" style="width: auto; height: 100%; aspect-ratio: 16 / 9; overflow: hidden;">
+      <canvas id="unity-canvas" width={{{ WIDTH }}} height={{{ HEIGHT }}} tabindex="-1"></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
         <div id="unity-progress-bar-empty">
@@ -17,11 +17,7 @@
         </div>
       </div>
       <div id="unity-warning"> </div>
-      <div id="unity-footer">
-        <div id="unity-webgl-logo"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">Shoot</div>
-      </div>
+      
     </div>
     <script>
 
@@ -57,11 +53,11 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/1219_4.loader.js";
+      var loaderUrl = buildUrl + "/0110.loader.js";
       var config = {
-        dataUrl: buildUrl + "/1219_4.data",
-        frameworkUrl: buildUrl + "/1219_4.framework.js",
-        codeUrl: buildUrl + "/1219_4.wasm",
+        dataUrl: buildUrl + "/0110.data",
+        frameworkUrl: buildUrl + "/0110.framework.js",
+        codeUrl: buildUrl + "/0110.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "Shoot",
@@ -103,8 +99,8 @@
       } else {
         // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
 
-        canvas.style.width = "960px";
-        canvas.style.height = "600px";
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
       }
 
       loadingBar.style.display = "block";
@@ -116,9 +112,7 @@
           progressBarFull.style.width = 100 * progress + "%";
               }).then((unityInstance) => {
                 loadingBar.style.display = "none";
-                fullscreenButton.onclick = () => {
-                  unityInstance.SetFullscreen(1);
-                };
+                
               }).catch((message) => {
                 alert(message);
               });
