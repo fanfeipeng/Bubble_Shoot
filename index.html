@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
   <body>
-    <div id="unity-container" class="unity-desktop" style="width: auto; height: 100%; aspect-ratio: 16 / 9; overflow: hidden;">
-      <canvas id="unity-canvas" width={{{ WIDTH }}} height={{{ HEIGHT }}} tabindex="-1"></canvas>
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
         <div id="unity-progress-bar-empty">
@@ -17,9 +17,46 @@
         </div>
       </div>
       <div id="unity-warning"> </div>
-      
+      <div id="unity-footer">
+        <div id="unity-webgl-logo"></div>
+        <div id="unity-fullscreen-button"></div>
+        <div id="unity-build-title">Shoot</div>
+      </div>
     </div>
     <script>
+
+
+    let idd = "";
+console.log("6666 ");
+       // 監聽來自父頁面的消息
+    window.addEventListener("message", function (event) 
+    {
+    console.log("接收到的消息：", event.data);//會包含baseUrl、id
+
+    // 檢查消息中是否包含正確的 baseUrl
+    if (event.data.baseUrl !== "http://localhost/victor/bubbleshoot.php") {
+        console.warn("收到來自未知來源的消息，已忽略");
+        return;
+    }
+    else
+    {
+      console.log("消息來源驗證通過，baseUrl：", event.data.baseUrl);
+      console.log("消息來源驗證通過，id：", event.data.id);
+      idd = "" + event.data.id;
+      console.log("Unity WebGL idd" + idd);
+    }
+    console.log("Unity WebGL idd2" + idd);
+    
+  // 確保消息中包含 id
+  
+    });
+  console.log("Unity WebGL idd3" + idd);
+
+
+
+
+
+
 
       var container = document.querySelector("#unity-container");
       var canvas = document.querySelector("#unity-canvas");
@@ -99,8 +136,8 @@
       } else {
         // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
 
-        canvas.style.width = "100%";
-        canvas.style.height = "100%";
+        canvas.style.width = "960px";
+        canvas.style.height = "600px";
       }
 
       loadingBar.style.display = "block";
@@ -112,11 +149,36 @@
           progressBarFull.style.width = 100 * progress + "%";
               }).then((unityInstance) => {
                 loadingBar.style.display = "none";
-                
+                fullscreenButton.onclick = () => {
+                  unityInstance.SetFullscreen(1);
+                };
               }).catch((message) => {
                 alert(message);
               });
             };
+
+           // 初始化 Unity WebGL
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+        })
+          .then((instance) => {
+            unityInstance = instance; // 保存 Unity 實例
+            loadingBar.style.display = "none";
+            console.log("Unity WebGL 已初始化");
+            console.log("Unity WebGL id" + idd);
+            unityInstance.SendMessage("loadid", "ReceiveID", idd);
+
+            
+          })
+          .catch((message) => {
+            console.error("Unity 初始化失敗：", message);
+          });
+      };
+
+
 
       document.body.appendChild(script);
 
