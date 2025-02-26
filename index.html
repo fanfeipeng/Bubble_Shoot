@@ -147,6 +147,18 @@
       };
       document.body.appendChild(script);
 
+      function ReceiveScoresFromUnity(score, taskScore) {
+    console.log("[index.html] 收到 Unity 傳來的分數:", score, taskScore);
+
+    // 接下來把這些分數再傳給「最外層父頁」，假設它是用 postMessage 來接收
+    window.parent.postMessage({
+      action: "ReceiveScoresFromUnity",
+      score: score,
+      taskScore: taskScore
+    }, "*");
+  }
+
+
     </script>
   </body>
 </html>
